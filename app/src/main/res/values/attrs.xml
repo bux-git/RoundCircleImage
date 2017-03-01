@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="borderRadius" format="dimension"></attr>
+    <attr name="src" format="reference"></attr>
+    <attr name="type">
+        <enum name="circle" value="0"></enum>
+        <enum name="round" value="1"></enum>
+    </attr>
+    
+   <declare-styleable name="RoundCircleImage">
+       <attr name="borderRadius"></attr>
+       <attr name="src"></attr>
+       <attr name="type"></attr>
+   </declare-styleable>
+
+    <attr name="RoundCircleImage_theme"></attr>
+</resources>
