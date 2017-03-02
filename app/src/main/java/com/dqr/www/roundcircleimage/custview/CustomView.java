@@ -35,6 +35,7 @@ public class CustomView extends LinearLayout {
         color4 = a.getColor(R.styleable.custom_attrs_custom_color4,0xffff0000);
         color5 = a.getColor(R.styleable.custom_attrs_custom_color4,0xffff0000);
 
+        setOrientation(VERTICAL);
 
         TextView textView1 = new TextView(context);
         textView1.setText("color1："+Integer.toHexString(color1));

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -19,7 +20,7 @@ import android.view.View;
 import com.dqr.www.roundcircleimage.R;
 
 /**
- * Description：
+ * Description：使用XFerMode 实现
  * Author：LiuYM
  * Date： 2017-02-28 17:56
  */
@@ -91,22 +92,20 @@ public class RoundCircleImage extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-            canvas.drawColor(Color.RED);
+        canvas.drawColor(Color.RED);
         switch (mType) {
             case ROUND:
-                Bitmap bitmap=Bitmap.createScaledBitmap(mSrc,getWidth(),getHeight(),false);
-                canvas.drawBitmap(roundBitmap(bitmap), 0, 0, null);
+                canvas.drawBitmap(roundBitmap(), 0, 0, null);
                 break;
             case CIRCLE:
                 int min = Math.min(getWidth(), getHeight());
-                Bitmap scaleBitmap = Bitmap.createScaledBitmap(mSrc, min, min, false);
-                canvas.drawBitmap(circleBitmap(scaleBitmap, min), 0, 0, null);
+                canvas.drawBitmap(circleBitmap(min), 0, 0, null);
                 break;
         }
 
     }
 
-    private Bitmap circleBitmap(Bitmap src, int min) {
+    private Bitmap circleBitmap(int min) {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
 
@@ -115,26 +114,35 @@ public class RoundCircleImage extends View {
         canvas.drawCircle(min / 2, min / 2, min / 2, paint);
 
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(src, 0, 0, paint);
+
+
+       canvas.drawBitmap(getScaleBitmap(min,min),0,0,paint);
 
         return circle;
     }
 
 
-    private Bitmap roundBitmap(Bitmap src) {
+    private Bitmap roundBitmap() {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
 
         Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+
         Canvas canvas = new Canvas(bitmap);
         RectF rectF = new RectF(0,0,getWidth(),getHeight());
         canvas.drawRoundRect(rectF,mBorderRadius,mBorderRadius, paint);
-
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(src, 0, 0, paint);
+
+        canvas.drawBitmap(getScaleBitmap(getWidth(),getHeight()), 0, 0, paint);
 
         return bitmap;
     }
 
 
+    private Bitmap getScaleBitmap(int srcWidth,int srcHeight){
+        Matrix matrix = new Matrix();
+        matrix.setScale(srcWidth*1f/mSrc.getWidth(),srcHeight*1f/mSrc.getHeight());
+        Bitmap src = Bitmap.createBitmap(mSrc, 0, 0, mSrc.getWidth(), mSrc.getHeight(), matrix, true);
+        return src;
+    }
 }
